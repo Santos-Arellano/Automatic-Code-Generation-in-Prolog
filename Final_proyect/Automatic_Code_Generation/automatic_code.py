@@ -1,5 +1,7 @@
 from pyswip import Prolog
 
+""" Stay hard """
+
 # Inicializar el motor Prolog
 prolog = Prolog()
 
