@@ -1,2 +1,0 @@
-#Abrir interprete
-'swipl'
