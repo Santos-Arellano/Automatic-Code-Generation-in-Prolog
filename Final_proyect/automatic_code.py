@@ -5,15 +5,26 @@ prolog = Prolog()
 prolog.consult('prolog_autocode.pl')
 
 def generate_code(language, specs):
-    code = list(prolog.query(f"generate_code({language}, {specs}, Code)"))
+    code = list(prolog.query(f"generate_code({language}, {specs}, Code)."))
     return code[0]['Code'] if code else "Error: Failed to generate code."
 
 def generate_code_button_clicked():
     language = language_var.get()
     specs = specs_entry.get()
-    generated_code = generate_code(language, specs)
+
+    # Construct query string with proper formatting
+    query = f"generate_code({language}, [{specs}], Code)."
+    print("Queryyy: ", query)
+    try:
+        # Query Prolog and retrieve code
+        code = list(prolog.query(query))
+        generated_code = code[0]['Code'] if code else "Error: Failed to generate code."
+    except Exception as e:
+        generated_code = f"Error: {e}"
+
     code_text.delete(1.0, END)
     code_text.insert(END, generated_code)
+
 
 # Crear la interfaz gráfica
 root = Tk()
