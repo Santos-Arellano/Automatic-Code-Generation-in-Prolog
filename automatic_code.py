@@ -4,10 +4,6 @@ from pyswip import Prolog
 prolog = Prolog()
 prolog.consult('prolog_autocode.pl')
 
-def generate_code(language, specs):
-    code = list(prolog.query(f"generate_code({language}, {specs}, Code)."))
-    return code[0]['Code'] if code else "Error: Failed to generate code."
-
 def generate_code_button_clicked():
     language = language_var.get()
     specs = specs_entry.get()
