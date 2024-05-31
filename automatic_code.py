@@ -39,5 +39,3 @@ generate_button.pack()
 
 code_text = Text(root, height=10, width=50)
 code_text.pack()
-
-root.mainloop()
