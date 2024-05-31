@@ -14,6 +14,11 @@ syntax(cpp, if_else(Cond, Then, Else), Code) :-
     atomics_to_string(ElseCode, '\n    ', ElseCodeStr),
     format(atom(Code), 'if (~w) {\n    ~w\n} else {\n    ~w\n}', [Cond, ThenCodeStr, ElseCodeStr]).
 
+syntax(cpp, do_while(Cond, Body), Code) :-
+    maplist(generate(cpp), Body, BodyCode),
+    atomics_to_string(BodyCode, '\n    ', BodyCodeStr),
+    format(atom(Code), 'do {\n    ~w\n} while (~w);', [BodyCodeStr, Cond]).
+
 % Sintaxis de Rust
 syntax(rust, assign(Var, Value), Code) :-
     format(atom(Code), 'let mut ~w = ~w;', [Var, Value]).
@@ -29,6 +34,11 @@ syntax(rust, if_else(Cond, Then, Else), Code) :-
     atomics_to_string(ThenCode, '\n    ', ThenCodeStr),
     atomics_to_string(ElseCode, '\n    ', ElseCodeStr),
     format(atom(Code), 'if ~w {\n    ~w\n} else {\n    ~w\n}', [Cond, ThenCodeStr, ElseCodeStr]).
+
+syntax(rust, do_while(Cond, Body), Code) :-
+    maplist(generate(rust), Body, BodyCode),
+    atomics_to_string(BodyCode, '\n    ', BodyCodeStr),
+    format(atom(Code), 'loop {\n    ~w\n    if !~w {\n        break;\n    }\n}', [BodyCodeStr, Cond]).
 
 % Generar código
 generate(Lang, Spec, Code) :-
