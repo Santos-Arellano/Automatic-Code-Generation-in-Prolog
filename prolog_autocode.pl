@@ -1,4 +1,5 @@
 % Sintaxis de C++
+
 syntax(cpp, assign(Var, Value), Code) :-
     format(atom(Code), '~w = ~w;', [Var, Value]).
 
@@ -42,13 +43,10 @@ syntax(rust, do_while(Cond, Body), Code) :-
 
 % Generar código
 generate(Lang, Spec, Code) :-
-    Spec =.. [Functor | Args],
-    format('Generating code for: ~w ~w ~w~n', [Lang, Functor, Args]),  % Línea de depuración
-    Call =.. [Functor | Args],
-    (syntax(Lang, Call, Code) ->
-        format('Generated: ~w~n', [Code])  % Línea de depuración
+    (syntax(Lang, Spec, Code) ->
+        format('Generated: ~w~n', [Code])
     ; 
-        format('Failed to generate code for: ~w ~w ~w~n', [Lang, Functor, Args]),
+        format('Failed to generate code for: ~w~n', [Spec]),
         fail).
 
 % Predicado principal para iniciar la generación de código
