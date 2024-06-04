@@ -36,6 +36,46 @@ def copy_to_clipboard():
     else:
         messagebox.showwarning("Copy to Clipboard", "No code to copy!")
 
+def show_examples():
+    examples_window = Toplevel(root)
+    examples_window.title("Specification Examples")
+    examples_window.geometry("400x300")
+
+    examples = """
+    
+    1.- Assign: 
+
+    assign(x, 10)
+
+    2.- Loops:
+
+    loop(i, 0, 5, [assign(sum, 'sum + i')])
+
+    do_while('x < 5', [assign(x, 'x + 1')])
+
+    3.- Conditionals
+
+    if_else('x > 0', [assign(y, 'x - 1')], [assign(y, 'x + 1')])
+
+    4.- Print
+
+    print('Hello, World!')
+
+    5.- Nested syntaxis
+
+    loop(i, 0, 5, [if_else((i == 3),[print("Hello world")],[loop(i, 0, 5, [assign(sum, 'sum + i')])])])
+    """
+
+    examples_label = Label(examples_window, text="Examples of Specifications:", font=('Helvetica', 12))
+    examples_label.pack(pady=10)
+
+    examples_text = Text(examples_window, height=10, width=50, wrap=WORD, font=('Helvetica', 12), relief=GROOVE, borderwidth=2)
+    examples_text.insert(END, examples)
+    examples_text.pack(pady=10)
+
+    close_button = ttk.Button(examples_window, text="Close", command=examples_window.destroy)
+    close_button.pack(pady=5)
+
 # Create the GUI
 root = Tk()
 root.title("Code Generation Interface")
@@ -55,7 +95,8 @@ mainframe.pack(fill=BOTH, expand=True)
 
 language_var = StringVar()
 ttk.Label(mainframe, text="Language (cpp/rust):").pack(pady=5)
-ttk.Entry(mainframe, textvariable=language_var).pack(fill=X, pady=5)
+language_combobox = ttk.Combobox(mainframe, textvariable=language_var, values=["cpp", "rust"])
+language_combobox.pack(fill=X, pady=5)
 
 ttk.Label(mainframe, text="Specifications:").pack(pady=5)
 specs_entry = ttk.Entry(mainframe)
@@ -66,6 +107,9 @@ generate_button.pack(pady=5)
 
 copy_button = ttk.Button(mainframe, text="Copy to Clipboard", command=copy_to_clipboard)
 copy_button.pack(pady=5)
+
+examples_button = ttk.Button(mainframe, text="Show Examples", command=show_examples)
+examples_button.pack(pady=5)
 
 code_text = Text(mainframe, height=10, width=50, wrap=WORD, font=('Helvetica', 12), relief=GROOVE, borderwidth=2)
 code_text.pack(pady=5)
