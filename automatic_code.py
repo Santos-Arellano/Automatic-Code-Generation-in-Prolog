@@ -9,7 +9,7 @@ prolog.consult('prolog_autocode.pl')
 
 def generate_code_button_clicked():
     language = language_var.get()
-    specs = specs_entry.get()
+    specs = specs_text.get(1.0, END).strip()
 
     # Construct query string with proper formatting
     query = f"generate_code({language}, [{specs}], Code)."
@@ -42,29 +42,28 @@ def show_examples():
     examples_window.geometry("400x300")
 
     examples = """
-    
-    1.- Assign: 
+1.- Assign: 
 
     assign(x, 10)
 
-    2.- Loops:
+2.- Loops:
 
     loop(i, 0, 5, [assign(sum, 'sum + i')])
 
     do_while('x < 5', [assign(x, 'x + 1')])
 
-    3.- Conditionals
+3.- Conditionals:
 
     if_else('x > 0', [assign(y, 'x - 1')], [assign(y, 'x + 1')])
 
-    4.- Print
+4.- Print:
 
     print('Hello, World!')
 
-    5.- Nested syntaxis
+5.- Nested syntax:
 
-    loop(i, 0, 5, [if_else((i == 3),[print("Hello world")],[loop(i, 0, 5, [assign(sum, 'sum + i')])])])
-    """
+    loop(i, 0, 5, [if_else((i == 3), [print("Hello world")], [loop(i, 0, 5, [assign(sum, 'sum + i')])])])
+"""
 
     examples_label = Label(examples_window, text="Examples of Specifications:", font=('Helvetica', 12))
     examples_label.pack(pady=10)
@@ -79,14 +78,14 @@ def show_examples():
 # Create the GUI
 root = Tk()
 root.title("Code Generation Interface")
-root.geometry("500x400")
+root.geometry("500x500")
 
 # Apply styles
 style = ttk.Style()
-style.theme_use('clam')  # You can change this to 'alt', 'clam', 'default', 'classic'
+style.theme_use('alt')  # You can change this to 'alt', 'clam', 'default', 'classic'
 
 style.configure('TLabel', font=('Helvetica', 12))
-style.configure('TButton', font=('Helvetica', 12, 'bold'), background='blue', foreground='white')
+style.configure('TButton', font=('Helvetica', 12, 'bold'), background='#4CA364', foreground='white')
 style.configure('TEntry', font=('Helvetica', 12))
 style.configure('TText', font=('Helvetica', 12))
 
@@ -99,8 +98,8 @@ language_combobox = ttk.Combobox(mainframe, textvariable=language_var, values=["
 language_combobox.pack(fill=X, pady=5)
 
 ttk.Label(mainframe, text="Specifications:").pack(pady=5)
-specs_entry = ttk.Entry(mainframe)
-specs_entry.pack(fill=X, pady=5)
+specs_text = Text(mainframe, height=5, wrap=WORD, font=('Helvetica', 12), relief=GROOVE, borderwidth=2)
+specs_text.pack(fill=X, pady=5)
 
 generate_button = ttk.Button(mainframe, text="Generate Code", command=generate_code_button_clicked)
 generate_button.pack(pady=5)
