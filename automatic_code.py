@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox, filedialog
 from tkinter import ttk
-from ttkthemes import ThemedTk
 from pyswip import Prolog
 
 # Initialize Prolog and consult the Prolog file
@@ -12,8 +11,6 @@ def generate_code_button_clicked():
     language = language_var.get()
     specs = specs_text.get(1.0, END).strip()
     
-    specs = specs_examples[language]
-
     # Construct query string with proper formatting
     query = f"generate_code({language}, [{specs}], Code)."
     print("Query: ", query)
@@ -79,7 +76,7 @@ def load_file():
         messagebox.showinfo("File Loaded", f"File {file_path} loaded successfully!")
 
 # Create the GUI
-root = ThemedTk(theme="radiance")  # Use a nzicer theme
+root = Tk()
 root.title("Code Generation Interface")
 root.geometry("600x600")
 
@@ -90,16 +87,9 @@ style.configure('TLabel', font=('Helvetica', 12))
 style.configure('TButton', font=('Helvetica', 12, 'bold'), background='#4CA364', foreground='white')
 style.configure('TEntry', font=('Helvetica', 12))
 style.configure('TText', font=('Helvetica', 12))
-root.geometry("500x400")
 
 mainframe = ttk.Frame(root, padding="10 10 10 10")
 mainframe.pack(fill=BOTH, expand=True)
-
-# Example specifications for each language
-specs_examples = {
-    'cpp': 'assign(x, 10), loop(i, 0, 5, [assign(sum, \'sum + i\')]), if_else(\'x > 0\', [assign(y, \'x - 1\')], [assign(y, \'x + 1\')])',
-    'rust': 'assign(x, 10), loop(i, 0, 5, [assign(sum, \'sum + i\')]), if_else(\'x > 0\', [assign(y, \'x - 1\')], [assign(y, \'x + 1\')])'
-}
 
 language_var = StringVar()
 ttk.Label(mainframe, text="Language (cpp/rust):").pack(pady=5)
@@ -109,8 +99,6 @@ language_combobox.pack(fill=X, pady=5)
 ttk.Label(mainframe, text="Specifications:").pack(pady=5)
 specs_text = Text(mainframe, height=7, wrap=WORD, font=('Helvetica', 12), relief=GROOVE, borderwidth=2)
 specs_text.pack(fill=X, pady=5)
-ttk.Label(mainframe, text="Language:").pack(pady=5)
-ttk.OptionMenu(mainframe, language_var, *specs_examples.keys()).pack(fill=X, pady=5)
 
 generate_button = ttk.Button(mainframe, text="Generate Code", command=generate_code_button_clicked)
 generate_button.pack(pady=10)
