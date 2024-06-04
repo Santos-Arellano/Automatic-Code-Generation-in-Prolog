@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
+from ttkthemes import ThemedTk
 from pyswip import Prolog
 
 # Initialize Prolog and consult the Prolog file
@@ -9,7 +10,7 @@ prolog.consult('prolog_autocode.pl')
 
 def generate_code_button_clicked():
     language = language_var.get()
-    specs = specs_entry.get()
+    specs = specs_examples[language]
 
     # Construct query string with proper formatting
     query = f"generate_code({language}, [{specs}], Code)."
@@ -37,29 +38,22 @@ def copy_to_clipboard():
         messagebox.showwarning("Copy to Clipboard", "No code to copy!")
 
 # Create the GUI
-root = Tk()
+root = ThemedTk(theme="radiance")  # Use a nzicer theme
 root.title("Code Generation Interface")
 root.geometry("500x400")
-
-# Apply styles
-style = ttk.Style()
-style.theme_use('clam')  # You can change this to 'alt', 'clam', 'default', 'classic'
-
-style.configure('TLabel', font=('Helvetica', 12))
-style.configure('TButton', font=('Helvetica', 12, 'bold'), background='blue', foreground='white')
-style.configure('TEntry', font=('Helvetica', 12))
-style.configure('TText', font=('Helvetica', 12))
 
 mainframe = ttk.Frame(root, padding="10 10 10 10")
 mainframe.pack(fill=BOTH, expand=True)
 
-language_var = StringVar()
-ttk.Label(mainframe, text="Language (cpp/rust):").pack(pady=5)
-ttk.Entry(mainframe, textvariable=language_var).pack(fill=X, pady=5)
+# Example specifications for each language
+specs_examples = {
+    'cpp': 'assign(x, 10), loop(i, 0, 5, [assign(sum, \'sum + i\')]), if_else(\'x > 0\', [assign(y, \'x - 1\')], [assign(y, \'x + 1\')])',
+    'rust': 'assign(x, 10), loop(i, 0, 5, [assign(sum, \'sum + i\')]), if_else(\'x > 0\', [assign(y, \'x - 1\')], [assign(y, \'x + 1\')])'
+}
 
-ttk.Label(mainframe, text="Specifications:").pack(pady=5)
-specs_entry = ttk.Entry(mainframe)
-specs_entry.pack(fill=X, pady=5)
+language_var = StringVar()
+ttk.Label(mainframe, text="Language:").pack(pady=5)
+ttk.OptionMenu(mainframe, language_var, *specs_examples.keys()).pack(fill=X, pady=5)
 
 generate_button = ttk.Button(mainframe, text="Generate Code", command=generate_code_button_clicked)
 generate_button.pack(pady=5)
