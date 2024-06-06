@@ -1,49 +1,53 @@
-#Steps
-1. Install swipl 8.4.2
-1. Make sure that you have the path to swipl in your system variables 
-2. git clone 
-3. Make a virtual environment   
-4. pip install pyswipl
-5. Once in the interface: Language (cpp/rust): Type cpp or rust
-5. Specifications: just put the high level instruction. example:
+# Pasos para la Generación de Código en Prolog
+1. Instala SWI-Prolog 8.4.2.
+2. Asegúrate de que el camino a SWI-Prolog esté en tus variables de sistema.
+3. Clona el repositorio.
+4. Crea un entorno virtual.
+5. Instala `pyswipl`.
+6. Lanza la interfaz e introduce el lenguaje deseado y las especificaciones.
 
-Language: cpp
+Por ejemplo:
 
-Specifications: assign(x, 10), loop(i, 0, 5, [assign(sum, 'sum + i')]), if_else('x > 0', [assign(y, 'x - 1')], [assign(y, 'x + 1')])
+Lenguaje: cpp
 
-Prolog Code Generation Workflow
-1. Predicates Overview
-syntax/3 Predicate
-Purpose: Generates C++ code based on specified patterns (Spec) and language (Lang).
-Usage: Called with syntax(Lang, Spec, Code), where Lang specifies the target language (e.g., cpp) and Spec defines the code structure to be generated.
-Implementation: Typically uses format/3 to construct code strings and may recursively call generate(Lang, Spec, Code) for nested structures.
-generate/3 Predicate
-Purpose: Orchestrates the generation process by calling syntax(Lang, Spec, Code) and handling success or failure.
-Usage: Initiates code generation with generate(Lang, Spec, Code), where Lang specifies the target language and Spec defines the specific code structure to generate.
-Implementation: Verifies if syntax(Lang, Spec, Code) succeeds and optionally provides debugging or error messages.
-generate_code/3 Predicate
-Purpose: Acts as the main entry point to generate code for a list of specifications (Specs) in a specified language (Lang).
-Usage: Called with generate_code(Lang, Specs, Code), where Lang specifies the target language and Specs is a list of code specifications.
-Implementation: Uses findall/3 to collect generated code snippets (C) for each Spec in Specs, then concatenates them into a single string using atomics_to_string/3.
-2. Built-in Predicates
-findall/3
-Purpose: Collects all instances of a specified term that satisfy a goal.
-Usage: findall(X, Goal, List), collects all instances of X that satisfy Goal into List.
-Example: findall(X, member(X, [a, b, c]), List) collects all elements in [a, b, c] into List.
-format/2 and format/3
-Purpose: Generates formatted strings.
-Usage: format(Format, Arguments) formats Arguments according to Format and outputs the result.
-Example: format(atom(Code), 'for (int ~w = ~w; ~w < ~w; ++~w) {\n ~w\n}', [Var, Start, Var, End, Var, BodyCodeStr]) formats a C++ loop construct.
-atom/1
-Purpose: Converts a term to an atomic term (an atom).
-Usage: atom(Term) converts Term to an atom.
-Example: atom('hello') creates the atom hello.
-maplist/2
-Purpose: Applies a predicate to each element of a list.
-Usage: maplist(Pred, List) applies Pred to each element of List.
-Example: maplist(number, [1, 2, 3]) succeeds if each element is a number.
-3. Nesting Code Generation Capabilities
-Description: Prolog's recursive predicate capabilities enable nested code generation.
-Usage: Inside syntax/3, you can call generate(Lang, SubSpec, SubCode) for nested specifications (SubSpec) within Spec.
-Example: Generating a loop where the loop body (Body) itself contains further specifications (e.g., assignments or nested loops).
+Especificaciones: assign(x, 10), loop(i, 0, 5, [assign(sum, 'sum + i')]), if_else('x > 0', [assign(y, 'x - 1')], [assign(y, 'x + 1')])
 
+# Flujo de Trabajo de Generación de Código en Prolog
+1. **Resumen de Predicados**
+    - **Predicado syntax/3**: Genera código basado en patrones especificados (Spec) y lenguaje (Lang).
+    - **Predicado generate/3**: Orquesta el proceso de generación y maneja el éxito o el fracaso.
+    - **Predicado generate_code/3**: Actúa como el punto de entrada principal para generar código para una lista de especificaciones (Specs) en un lenguaje especificado (Lang).
+    
+2. **Predicados Incorporados**
+    - **findall/3**: Recoge todas las instancias de un término especificado que satisface un objetivo.
+    - **format/2 y format/3**: Genera cadenas de texto formateadas.
+    - **atom/1**: Convierte un término en un término atómico (un átomo).
+    - **maplist/2**: Aplica un predicado a cada elemento de una lista.
+
+3. **Capacidades de Generación de Código Anidado**
+    Las capacidades de predicado recursivo de Prolog permiten la generación de código anidado, permitiendo estructuras de código complejas.
+
+# Tareas Avanzadas
+### a) Soporte para Múltiples Lenguajes Objetivo
+Extiende el programa para soportar la generación de código para múltiples lenguajes objetivo (por ejemplo, Python, JavaScript).
+
+### b) Generación de Código Interactiva
+Crea una interfaz interactiva para especificar código de alto nivel y generar código de lenguaje objetivo.
+
+### c) Optimización y Refactorización
+Implementa técnicas de optimización para mejorar el código generado. Ejemplo: Combina múltiples asignaciones en una sola declaración cuando sea posible.
+
+# Entrega
+- Envía el archivo fuente de Prolog que contiene la sintaxis del lenguaje objetivo, el lenguaje de especificación y las funciones de generación de código.
+- Incluye un archivo README con documentación y explicaciones.
+- Proporciona un informe con casos de prueba y sus resultados.
+- Haz y envía una presentación para explicar la solución.
+
+
+Este programa es una interfaz gráfica de usuario (GUI) que permite a los usuarios especificar código de alto nivel y generar código en un lenguaje objetivo (C++ o Rust). Utiliza el lenguaje de programación lógica Prolog para definir la sintaxis del lenguaje objetivo y las reglas para generar el código.
+
+La interfaz de usuario está construida con Tkinter, una biblioteca de Python para la creación de interfaces gráficas. Permite a los usuarios seleccionar el lenguaje objetivo, ingresar las especificaciones de código de alto nivel, y generar, copiar y visualizar el código generado. También proporciona una opción para cargar un archivo Prolog personalizado y una ventana de ejemplos para ayudar a los usuarios a entender cómo escribir las especificaciones.
+
+Las reglas de Prolog definen la sintaxis del lenguaje objetivo y cómo generar el código a partir de las especificaciones de alto nivel. Cada regla de sintaxis toma una especificación (como una asignación, un bucle o una condición) y genera el código correspondiente en el lenguaje objetivo. La función generate_code toma una lista de especificaciones y genera el código para todas ellas.
+
+Cuando el usuario hace clic en el botón "Generate Code", el programa construye una consulta Prolog con las especificaciones ingresadas y el lenguaje seleccionado, y luego ejecuta la consulta para generar el código. Si la generación de código es exitosa, el código se muestra en la interfaz de usuario. Si ocurre un error, se muestra un mensaje de error.
