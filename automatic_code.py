@@ -52,6 +52,8 @@ def show_examples():
 
     do_while('x < 5', [assign(x, 'x + 1')])
 
+    while('x < 20', [assign(x, 'x + 1')])
+
 3.- Conditionals:
 
     if_else('x > 0', [assign(y, 'x - 1')], [assign(y, 'x + 1')])
